@@ -1,7 +1,12 @@
 <?php
 
-// $docker = shell_exec('docker kill \$(docker ps -aq)');
-// $docker = shell_exec('docker rm \$(docker ps -aq)');
+$containers = shell_exec('docker ps -aq');
+$containers = explode("\n", $containers);
+foreach ($container as $container) {
+  shell_exec('docker kill ' . $container);
+  shell_exec('docker rm ' . $container);
+}
+
 $output = shell_exec('virtualmin list-domains --simple-multiline');
 $output = explode("\n", $output);
 $sites = array();

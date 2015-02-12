@@ -27,7 +27,18 @@ foreach ($output as $line) {
 foreach ($sites as $site_name => $site) {
   $home = $site['Home directory'];
   $cmd = 'docker run -d -p 80';
-  $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www ';
+  switch ($site['Plan']) {
+    case 'Drupal':
+      $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www:ro ';
+      $cmd .= ' -v ' . $home . '/public_html/sites/default/files:/usr/share/nginx/www/sites/default/files:rw ';
+    break;
+    case 'Wordpress':
+      $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www:ro ';
+      $cmd .= ' -v ' . $home . '/public_html/wp/wp-content:/usr/share/nginx/www/wp/wp-content:rw ';
+    break;
+    default:
+      $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www ';    
+  }
   $cmd .= ' -v ' . $home . '/logs:/var/log/nginx ';
   $cmd .= ' -v ' . $home . '/etc/nginx.conf:/etc/nginx/sites-enabled/nginx.conf ';
   $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';

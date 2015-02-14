@@ -2,7 +2,7 @@
 
 $containers = shell_exec('docker ps -aq');
 $containers = explode("\n", $containers);
-foreach ($container as $container) {
+foreach ($containers as $container) {
   shell_exec('docker kill ' . $container);
   shell_exec('docker rm ' . $container);
 }
@@ -27,7 +27,7 @@ foreach ($output as $line) {
 foreach ($sites as $site_name => $site) {
   $home = $site['Home directory'];
   $cmd = 'docker run -d -p 80';
-  switch ($site['Plan']) {
+  switch ($site['Template']) {
     case 'Drupal':
       $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www:ro ';
       $cmd .= ' -v ' . $home . '/public_html/sites/default/files:/usr/share/nginx/www/sites/default/files:rw ';

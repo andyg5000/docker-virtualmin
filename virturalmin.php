@@ -75,6 +75,7 @@ function docker_start_containers() {
     }
     $cmd .= ' -v ' . $home . '/logs:/var/log/nginx ';
     $cmd .= ' -v ' . $home . '/etc/nginx.conf:/etc/nginx/sites-enabled/nginx.conf ';
+    $cmd .= ' -v ' . $home . '/etc/php5/php.ini:/etc/php5/fpm/conf.d/zzz_local.ini ';
     $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';
     $cmd .= ' -e DATABASE_HOST=10.132.129.239 ';
     $cmd .= ' --name ' . $site_name . ' ';

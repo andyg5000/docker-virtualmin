@@ -76,10 +76,15 @@ function docker_start_containers() {
     $cmd .= ' -v ' . $home . '/logs:/var/log/nginx ';
     $cmd .= ' -v ' . $home . '/etc/nginx.conf:/etc/nginx/sites-enabled/nginx.conf ';
     $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';
+    $cmd .= ' -e DATABASE_HOST=10.132.129.239 ';
     $cmd .= ' --name ' . $site_name . ' ';
+    $cmd .= ' -m 128m ';
     $cmd .= ' andyg5000/nginx';
     $docker = shell_exec($cmd);
   }
-
-  $docker = shell_exec('docker run -d -p 80:80 --name proxy -v /var/run/docker.sock:/tmp/docker.sock jwilder/nginx-proxy');
+  $docker = shell_exec('docker run -d -p 80:80 -p 443:443 --name nginx -v /var/log/nginx:/var/log/nginx -v /tmp/cache:/var/nginx -v /home/config/nginx/nginx.conf:/etc/nginx/nginx.conf -v /home/config/ssl:/etc/nginx/ssl -v /tmp/nginx:/etc/nginx/conf.d -t nginx');
+  //mkdir('/tmp/templates');
+  //$docker = shell_exec('curl -o /home/config/templates/nginx.tmpl https://raw.githubusercontent.com/jwilder/docker-gen/master/templates/nginx.tmpl');
+  $docker = shell_exec('docker run -d --name nginx-gen --volumes-from nginx  -v /var/run/docker.sock:/tmp/docker.sock -v /home/config/templates:/etc/docker-gen/templates -t jwilder/docker-gen:0.3.4 -notify-sighup nginx -watch --only-published /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf -tlskey=/home/config/ssh/server.key -tslcert=/home/config/ssh/server.crt --tlsverify=false');
+  // $docker = shell_exec('docker run -d -p 80:80 --name proxy -v /var/run/docker.sock:/tmp/docker.sock jwilder/nginx-proxy');
 }

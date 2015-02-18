@@ -80,7 +80,7 @@ function docker_start_containers() {
     $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';
     $cmd .= ' -e DATABASE_HOST=10.132.129.239 ';
     $cmd .= ' --name ' . $site_name . ' ';
-    $cmd .= ' -m 128m ';
+    $cmd .= ' -m 128m -c 128';
     $cmd .= ' --restart=always ';
     $cmd .= ' andyg5000/nginx';
     $docker = shell_exec($cmd);

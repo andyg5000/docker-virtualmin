@@ -74,13 +74,15 @@ function docker_start_containers() {
       default:
         $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www ';    
     }
+    $cmd .= ' -v /home/config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro ';
     $cmd .= ' -v ' . $home . '/logs:/var/log/nginx ';
     $cmd .= ' -v ' . $home . '/etc/nginx.conf:/etc/nginx/sites-enabled/nginx.conf ';
+    $cmd .= ' -v /home/config/php/ssmtp.ini:/etc/php5/fpm/conf.d/ssmtp.ini:ro ';
     $cmd .= ' -v ' . $home . '/etc/php5/php.ini:/etc/php5/fpm/conf.d/zzz_local.ini ';
     $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';
     $cmd .= ' -e DATABASE_HOST=10.132.129.239 ';
     $cmd .= ' --name ' . $site_name . ' ';
-    $cmd .= ' -m 128m -c 128';
+    $cmd .= ' -m 64m -c 50';
     $cmd .= ' --restart=always ';
     $cmd .= ' andyg5000/nginx';
     $docker = shell_exec($cmd);

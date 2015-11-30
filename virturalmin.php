@@ -65,14 +65,16 @@ function docker_start_containers() {
       case 'Drupal':
         $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www:ro ';
         $cmd .= ' -v ' . $home . '/public_html/sites/default/files:/usr/share/nginx/www/sites/default/files:rw ';
+        $cmd .= ' -m 256m -c 75';
       break;
       case 'Wordpress':
         $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www:ro ';
         $cmd .= ' -v ' . $home . '/public_html/wp/wp-content:/usr/share/nginx/www/wp/wp-content:rw ';
         $cmd .= ' -v ' . $home . '/public_html/wp-content:/usr/share/nginx/www/wp-content:rw ';
+        $cmd .= ' -m 128m -c 75';
       break;
       default:
-        $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www ';    
+        $cmd .= ' -v ' . $home . '/public_html:/usr/share/nginx/www ';
     }
     $cmd .= ' -v /home/config/ssmtp/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro ';
     $cmd .= ' -v ' . $home . '/logs:/var/log/nginx ';
@@ -82,7 +84,6 @@ function docker_start_containers() {
     $cmd .= ' -e VIRTUAL_HOST=www.' . $site_name . ',' . $site_name . ' ';
     $cmd .= ' -e DATABASE_HOST=10.132.129.239 ';
     $cmd .= ' --name ' . $site_name . ' ';
-    $cmd .= ' -m 64m -c 50';
     $cmd .= ' --restart=always ';
     $cmd .= ' andyg5000/nginx';
     $docker = shell_exec($cmd);

@@ -18,7 +18,7 @@ function docker_kill_containers() {
 
 function docker_rm_containers() {
   foreach (docker_containers() as $container) {
-    shell_exec('docker rm ' . $container);
+    shell_exec('docker rm -v ' . $container);
   }
 }
 
